@@ -2,13 +2,23 @@ from functools import partial
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import gym
 
 from logs.plotter import Plotter
+import env.env_lemings
+from env.levels import *
+
+MY_ENV = gym.make(
+    "LemingsEnv-v1", 
+    level=lvl_small,
+    stochastic_wind=False,
+    extra_moves=False
+)
 
 N_BUCKETS = 4
 N_ROLLING = 3
 
-def main():
+def plots():
     plotter = Plotter(logs_dir_path="logs\\logs_dbg", save_plot_path="logs\\plots\\dbg_plot.png")
     plotter.make_plot()
 
@@ -47,6 +57,17 @@ def rolling():
     # df["TotalReward"] = df["TotalReward"].rolling(N_ROLLING, min_periods=1).mean()
     moving_mean(df)
     print(df)
+
+def main():
+    # s = (1, 2), 3, 4
+    # print(s)
+    # (a, b), c, d = s
+    # print(a, b, c, d)
+
+    s1 = (1, 2)
+    q = np.array(np.reshape(np.arange(81), (3, 3, 3, 3)))
+    q[-1, -1, -1, :] = 0
+    print(q)
 
 if __name__ == "__main__":
     main()

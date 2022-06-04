@@ -38,7 +38,7 @@ class LemingsEnv(gym.Env):
         self.observation_space = spaces.Dict({
             "position": spaces.Box(
                 low=np.array([0, 0]), 
-                high=np.array([self._board_hight, self._board_width]), 
+                high=np.array([self._board_hight - 1, self._board_width - 1]), 
                 dtype=np.int16
             ),
             "leming_id": spaces.Discrete(level.n_lemings),
@@ -46,7 +46,8 @@ class LemingsEnv(gym.Env):
         })
 
         # Action space
-        self.action_space = spaces.Discrete(6 if extra_moves else 2)
+        self.action_space_size = 6 if extra_moves else 2
+        self.action_space = spaces.Discrete(self.action_space_size)
 
         self._action_dict = {
             0: (0, -1),     # left
@@ -191,6 +192,25 @@ class LemingsEnv(gym.Env):
                     "info": f"[Env Info] Leming {self._leming_id} moved and is still alive.",
                     "fate": "unknown"
                 }
+    
+    def get_q_shape(self, include_moves_done: bool=False) -> Tuple:
+
+        if not include_moves_done:
+            return (
+                self._board_hight,
+                self._board_width,
+                self._level.n_lemings,
+                self.action_space_size
+            )
+        
+        return (
+            self._board_hight,
+            self._board_width,
+            self._level.n_lemings,
+            self._level.moves_limit,
+            self.action_space_size
+        )
+
     
     def render(self, space=False) -> None:
         print("|" + "---" * self._board_width + "|")
