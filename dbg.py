@@ -7,7 +7,7 @@ from logs.logger import Logger
 from logs.plotter import Plotter
 
 RUNS = 10               # How many experiments to run
-EPISODES = 250          # How many episodes in each run
+EPISODES = 25          # How many episodes in each run
 SEED = 44               # Starting seed
 VERBOSE = False         # Renders the game states if set as True
 LEVEL = lvl_small       # Choose a level to run the experiments
@@ -84,15 +84,18 @@ def run_experiment(seed):
 
 if __name__ == "__main__":
 
-    for i, run in enumerate(range(RUNS)):
-        print(f"\n=== EXPERIMENT NR {i + 1} ===\n")
-        run_experiment(SEED + i)
-    
-    # Make plots
+    # Initialize Plotter
     plotter = Plotter(
         logs_dir_path=LOGS_DIR, 
         save_plot_path="logs\\plots\\pipeline_test_plot_v2.png",
         n_action_buckets=400,
         episodes_moving_average=10
     )
+
+    # Run experiments
+    for i, run in enumerate(range(RUNS)):
+        print(f"\n=== EXPERIMENT NR {i + 1} ===\n")
+        run_experiment(SEED + i)
+    
+    # Make plots
     plotter.make_plot()

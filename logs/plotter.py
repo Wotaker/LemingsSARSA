@@ -17,10 +17,24 @@ class Plotter():
         n_action_buckets: int=400, 
         episodes_moving_average: int=10,
     ) -> None:
+
         self.logs_dir_path = logs_dir_path
         self.save_plot_path = save_plot_path
         self.n_action_buckets = n_action_buckets
         self.episodes_moving_average = episodes_moving_average
+
+        self._clear_logs_dir()
+    
+    def _clear_logs_dir(self):
+        
+        if input(f"Do you really want to clear {self.logs_dir_path} directory [y/n]? ").lower() != "y":
+            return
+        
+        files = os.listdir(self.logs_dir_path)
+        files = list(filter(lambda f_name: f_name[:5] in ["actio", "episo"], files))
+        for f in files:
+            os.remove(os.path.join(self.logs_dir_path, f))
+
     
     def _bucketify(self, max_actions: int, df: pd.DataFrame):
         buckets = np.round(np.linspace(0, max_actions, self.n_action_buckets + 1)).astype('int')
@@ -227,4 +241,5 @@ class Plotter():
         self._plot_IV(axes[1, 1])
         fig.tight_layout()
         plt.savefig(self.save_plot_path)
+        print(f"[Info] Saved evaluation plot in {self.save_plot_path}")
         plt.show()  

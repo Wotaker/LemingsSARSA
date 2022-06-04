@@ -99,6 +99,7 @@ class LemingsEnv(gym.Env):
     def _next_leming(self) -> bool:
         "Reacts on lemings death or rescue. Returns True if there are any lemings left, else False"
         
+        # if self._leming_id < self._level.n_lemings:
         self._leming_id += 1
         self._moves_done = 0
         self._pos = (0, 0)

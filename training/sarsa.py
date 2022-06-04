@@ -1,4 +1,5 @@
 from typing import Tuple
+import traceback
 import numpy as np
 import gym
 
@@ -56,7 +57,7 @@ def init_Q(shape: Tuple, type: str="equal") -> np.ndarray:
     if type == "equal":
         pass
     if type == "random":
-        Q = Q + np.random(shape)
+        Q = Q + np.random.random(shape)
     else:
         print("[Warning] Unsuported Q initialization type! Initializing with ones")
     
@@ -140,7 +141,7 @@ def run_sarsa(seed):
             MY_ENV.render(space=True)
 
         # Choose first action to take
-        action = epsilon_greedy(Q, (y, x, leming_id), MY_ENV.action_space_size, EXPERIMENT_RATE)
+        action = epsilon_greedy(Q, (y, x, leming_id - 1), MY_ENV.action_space_size, EXPERIMENT_RATE)
 
         # Loop until done
         action_counter = 0
@@ -172,13 +173,21 @@ def run_sarsa(seed):
 
             # Choose action a' from s' using e-greedy policy based on Q
             action_next = epsilon_greedy(
-                Q, (y_next, x_next, leming_id_next), MY_ENV.action_space_size, EXPERIMENT_RATE
+                Q, (y_next, x_next, leming_id_next - 1), MY_ENV.action_space_size, EXPERIMENT_RATE
             )
             
             # Update Q table
-            q_prev = Q[y, x, leming_id, action]
-            Q[y, x, leming_id, action] = (1 - DISCOUNT_FACTOR) * q_prev +\
-                DISCOUNT_FACTOR * (reward + LEARNING_RATE * Q[y_next, x_next, leming_id_next, action_next])
+            q_prev = Q[y, x, leming_id - 1, action]
+            try:
+                Q[y, x, leming_id - 1, action] = (1 - DISCOUNT_FACTOR) * q_prev +\
+                    DISCOUNT_FACTOR * (reward + LEARNING_RATE * Q[y_next, x_next, leming_id_next - 1, action_next])
+            except IndexError as e:
+                print(f"Episode {ep}, step {step}")
+                print(f"Leming_id: {leming_id}")
+                print(f"Leming_id_next: {leming_id_next}")
+                traceback.print_exc()
+                exit(1)
+                
             
             # Go to next step
             y, x, leming_id, moves_done = y_next, x_next, leming_id_next, moves_done_next
@@ -193,16 +202,19 @@ def run_sarsa(seed):
 
 if __name__ == "__main__":
     
+    # Initialize Plotter
+    plotter = Plotter(
+        logs_dir_path=LOGS_DIR, 
+        save_plot_path="logs\\plots\\pipeline_test_plot_v2.png",
+        n_action_buckets=400,
+        episodes_moving_average=10
+    )
+
+    # Run experiments
     for i, run in enumerate(range(RUNS)):
         print(f"\n=== EXPERIMENT NR {i + 1} ===\n")
         run_sarsa(SEED + i)
     
     # Make plots
-    plotter = Plotter(
-        logs_dir_path=LOGS_DIR, 
-        save_plot_path="logs\\plots\\sarsa_first_try.png",
-        n_action_buckets=400,
-        episodes_moving_average=10
-    )
     plotter.make_plot()
 
