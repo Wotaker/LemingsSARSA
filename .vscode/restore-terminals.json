@@ -1,0 +1,37 @@
+{
+    "artificialDelayMilliseconds": 200,
+    "keepExistingTerminalsOpen": false,
+    "runOnStartup": true,
+    "terminals": [
+        {
+            "splitTerminals": [
+                {
+                    "name": "Run",
+                    "commands": [ 
+                        "set PYTHONPATH=%PYTHONPATH%;C:\\Users\\wojci\\Desktop\\AGH\\Semestr VI\\Podstawy Uczenia Maszynowego\\Lab05\\"
+                    ]
+                }
+            ]
+        },
+        {
+            "splitTerminals": [
+                {
+                    "name": "python",
+                    "commands": [ 
+                        "set PYTHONPATH=%PYTHONPATH%;C:\\Users\\wojci\\Desktop\\AGH\\Semestr VI\\Podstawy Uczenia Maszynowego\\Lab05\\"
+                    ]
+                }
+            ]
+        },
+        {
+            "splitTerminals": [
+                {
+                    "name": "cmd",
+                    "commands": [ 
+                        "set PYTHONPATH=%PYTHONPATH%;C:\\Users\\wojci\\Desktop\\AGH\\Semestr VI\\Podstawy Uczenia Maszynowego\\Lab05\\"
+                    ]
+                }
+            ]
+        }
+    ]
+}
