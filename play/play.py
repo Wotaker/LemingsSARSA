@@ -3,7 +3,12 @@ import gym
 import env.env_lemings
 from env.levels import *
 
-my_env = gym.make("LemingsEnv-v1", level=lvl_small)
+my_env = gym.make(
+    "LemingsEnv-v1", 
+    level=lvl_chimney,
+    stochastic_wind=True,
+    extra_moves=False
+)
 
 
 action_dict = {

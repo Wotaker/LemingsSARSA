@@ -39,6 +39,25 @@ lvl_small = LemingsLevel(
     moves_limit=80
 )
 
+lvl_chimney = LemingsLevel(
+    name="Chimney",
+    board=np.array([
+        [0, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+        [2, 0, 1, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 1, 0, 0, 2, 1, 1, 0, 0],
+        [0, 2, 1, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 2],
+        [2, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 1, 1, 0, 0, 0, 0, 0, 0],
+        [2, 2, 0, 1, 1, 1, 2, 2, 2, 0]
+    ]),
+    winds=np.array(
+        [0, 0, 0, 2, 2, 0, 0, 0, 0, 0]
+    ),
+    n_lemings=10,
+    moves_limit=80
+)
+
 lvl_debug = LemingsLevel(
     name="Dbg",
     board=np.array([

@@ -34,6 +34,9 @@ class LemingsEnv(gym.Env):
         self._stochastic_wind = stochastic_wind
         self._reward_scale = reward_scale
 
+        # dbg
+        print(f"Board shape: ({self._board_hight, self._board_width})")
+
         # Observation space
         self.observation_space = spaces.Dict({
             "position": spaces.Box(
@@ -76,7 +79,7 @@ class LemingsEnv(gym.Env):
         # Landed off the board - do not move
         if new_row >= self._board_hight or new_row < 0:
             return True
-        if new_row >= self._board_width or new_col < 0:
+        if new_col >= self._board_width or new_col < 0:
             return True
         
         # Landed on rocks - do not move
@@ -162,7 +165,7 @@ class LemingsEnv(gym.Env):
             
             # Move vertically by the wind
         lift = self._level.winds[self._pos[1]]
-        if self._stochastic_wind:
+        if self._stochastic_wind and lift > 0:
             lift += np.random.choice([-1, 0, 1])
         for _ in range(lift):
             if self._try_move((-1, 0)) == False:                    # leming is dead

@@ -16,19 +16,22 @@ class Plotter():
         save_plot_path: str,
         n_action_buckets: int=400, 
         episodes_moving_average: int=10,
+        fresh_data: bool=True,
     ) -> None:
 
         self.logs_dir_path = logs_dir_path
         self.save_plot_path = save_plot_path
         self.n_action_buckets = n_action_buckets
         self.episodes_moving_average = episodes_moving_average
+        self.fresh_data = fresh_data
 
-        self._clear_logs_dir()
+        if self.fresh_data:
+            self._clear_logs_dir()
     
     def _clear_logs_dir(self):
         
-        if input(f"Do you really want to clear {self.logs_dir_path} directory [y/n]? ").lower() != "y":
-            return
+        # if input(f"Do you really want to clear {self.logs_dir_path} directory [y/n]? ").lower() != "y":
+        #     return
         
         files = os.listdir(self.logs_dir_path)
         files = list(filter(lambda f_name: f_name[:5] in ["actio", "episo"], files))
@@ -42,6 +45,9 @@ class Plotter():
         return df.groupby(["ActionNr"], as_index=False).max().fillna(method='ffill')
     
     def _moving_mean(self, df: pd.DataFrame):
+        df["RescuedRatio"] = df["RescuedRatio"].rolling(self.episodes_moving_average, min_periods=1).mean()
+        df["TornsRatio"] = df["TornsRatio"].rolling(self.episodes_moving_average, min_periods=1).mean()
+        df["BoredomRatio"] = df["BoredomRatio"].rolling(self.episodes_moving_average, min_periods=1).mean()
         df["TimeInActions"] = df["TimeInActions"].rolling(self.episodes_moving_average, min_periods=1).mean()
         df["TotalReward"] = df["TotalReward"].rolling(self.episodes_moving_average, min_periods=1).mean()
         return df

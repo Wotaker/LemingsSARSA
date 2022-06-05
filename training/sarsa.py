@@ -12,13 +12,13 @@ from logs.plotter import Plotter
 
 PLOT_SAVE_PATH = "logs\\plots\\plot_sarsa.png"
 LOGS_DIR_PATH = "logs\\logs_sarsa"
-SEED = 420               # Starting seed
+SEED = 421              # Starting seed
 VERBOSE = False         # Renders the game states if set as True
 LOG_EP_EVRY = 500
 
 
 # === Environment Parameters ===
-LEVEL = lvl_small
+LEVEL = lvl_chimney
 STOCHASTIC_WIND = False
 EXTRA_MOVES = False
 
@@ -30,7 +30,7 @@ MY_ENV = gym.make(
 )
 
 # === Learning Parameters ===
-RUNS = 10
+RUNS = 1
 EPISODES = 5000
 LEARNING_RATE = 0.5
 DISCOUNT_FACTOR = 0.95
@@ -212,7 +212,7 @@ if __name__ == "__main__":
         logs_dir_path=LOGS_DIR_PATH, 
         save_plot_path=PLOT_SAVE_PATH,
         n_action_buckets=200,
-        episodes_moving_average=10
+        episodes_moving_average=25
     )
 
     # Run experiments

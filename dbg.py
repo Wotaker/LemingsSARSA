@@ -7,11 +7,12 @@ from logs.logger import Logger
 from logs.plotter import Plotter
 
 RUNS = 1               # How many experiments to run
-EPISODES = 2           # How many episodes in each run
+EPISODES = 1000           # How many episodes in each run
 SEED = 44               # Starting seed
-VERBOSE = True         # Renders the game states if set as True
+VERBOSE = False         # Renders the game states if set as True
 LEVEL = lvl_debug       # Choose a level to run the experiments
 
+PLOT_SAVE_PATH = "logs\\plots\\plot_dbg.png"
 LOGS_DIR = "logs\\logs_test"
 
 
@@ -87,9 +88,9 @@ if __name__ == "__main__":
     # Initialize Plotter
     plotter = Plotter(
         logs_dir_path=LOGS_DIR, 
-        save_plot_path="logs\\plots\\pipeline_test_plot_v2.png",
-        n_action_buckets=40,
-        episodes_moving_average=3
+        save_plot_path=PLOT_SAVE_PATH,
+        n_action_buckets=200,
+        episodes_moving_average=25
     )
 
     # Run experiments

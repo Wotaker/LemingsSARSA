@@ -46,10 +46,6 @@ class Logger():
         # Bool flag if logg or not the fate
         logg_fate = self.lemings_left <= self.lemings_history_size
 
-        # dbg
-        # if fate == "rescued":
-        #     print(f"Lemings left: {self.lemings_left}, logg_fate={logg_fate}")
-
         # Determine the fate
         rescued = int(fate == "rescued" and logg_fate)
         torns = int(fate == "torns" and logg_fate)
