@@ -1,3 +1,5 @@
+import datetime
+from time import time
 from typing import Tuple
 import traceback
 import numpy as np
@@ -8,10 +10,11 @@ from env.levels import *
 from logs.logger import Logger
 from logs.plotter import Plotter
 
-
-LOGS_DIR = "logs\\logs_sarsa"
-SEED = 42               # Starting seed
+PLOT_SAVE_PATH = "logs\\plots\\plot_sarsa.png"
+LOGS_DIR_PATH = "logs\\logs_sarsa"
+SEED = 420               # Starting seed
 VERBOSE = False         # Renders the game states if set as True
+LOG_EP_EVRY = 500
 
 
 # === Environment Parameters ===
@@ -28,7 +31,7 @@ MY_ENV = gym.make(
 
 # === Learning Parameters ===
 RUNS = 10
-EPISODES = 250
+EPISODES = 5000
 LEARNING_RATE = 0.5
 DISCOUNT_FACTOR = 0.95
 EXPERIMENT_RATE = 0.05
@@ -94,7 +97,7 @@ def epsilon_greedy(Q: np.ndarray, s: Tuple, n_actions:int,  epsilon: float, trai
         next action to take
     """
 
-    if (not train) or np.random.rand() < epsilon:
+    if (not train) or np.random.rand() > epsilon:
         if len(s) == 3:
             action = np.argmax(Q[s[0], s[1], s[2], :])
         else:
@@ -112,8 +115,8 @@ def run_sarsa(seed):
     # Initialize logger
     logger = Logger(
         LEVEL.n_lemings,
-        lemings_history_size=20,
-        logs_dir_path=LOGS_DIR, 
+        lemings_history_size=5,
+        logs_dir_path=LOGS_DIR_PATH, 
         params={
             "lvl": LEVEL.name,
             "nEp": EPISODES,
@@ -125,11 +128,13 @@ def run_sarsa(seed):
 
     # Create and initialize Q table
     Q = init_Q(shape=(MY_ENV.get_q_shape(include_moves_done=False)), type="random")
+    # if seed == SEED:
+    #     print(f" = = = Q szhape: {Q.shape}")
 
     total_action_counter = 0
     for ep in range(1, EPISODES + 1):
 
-        if ep == 1 or ep % 25 == 0:
+        if ep == 1 or ep % LOG_EP_EVRY == 0:
             print(f"[Info] Episode nr {ep}")
 
         # Init environment in starting state
@@ -204,17 +209,21 @@ if __name__ == "__main__":
     
     # Initialize Plotter
     plotter = Plotter(
-        logs_dir_path=LOGS_DIR, 
-        save_plot_path="logs\\plots\\pipeline_test_plot_v2.png",
-        n_action_buckets=400,
+        logs_dir_path=LOGS_DIR_PATH, 
+        save_plot_path=PLOT_SAVE_PATH,
+        n_action_buckets=200,
         episodes_moving_average=10
     )
 
     # Run experiments
+    start = time()
     for i, run in enumerate(range(RUNS)):
         print(f"\n=== EXPERIMENT NR {i + 1} ===\n")
         run_sarsa(SEED + i)
+    end = time()
     
     # Make plots
-    plotter.make_plot()
+    plotter.make_plot(show=False)
 
+    # Print elapsed time
+    print(f"\nElapsed time: {datetime.timedelta(seconds=(end - start))}")

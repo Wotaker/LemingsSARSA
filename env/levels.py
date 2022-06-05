@@ -51,6 +51,6 @@ lvl_debug = LemingsLevel(
     winds=np.array(
         [0, 0, 0, 0, 0, 0]
     ),
-    n_lemings=20,
+    n_lemings=10,
     moves_limit=15
 )

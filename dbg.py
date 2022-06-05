@@ -6,11 +6,11 @@ from env.levels import *
 from logs.logger import Logger
 from logs.plotter import Plotter
 
-RUNS = 10               # How many experiments to run
-EPISODES = 25          # How many episodes in each run
+RUNS = 1               # How many experiments to run
+EPISODES = 2           # How many episodes in each run
 SEED = 44               # Starting seed
-VERBOSE = False         # Renders the game states if set as True
-LEVEL = lvl_small       # Choose a level to run the experiments
+VERBOSE = True         # Renders the game states if set as True
+LEVEL = lvl_debug       # Choose a level to run the experiments
 
 LOGS_DIR = "logs\\logs_test"
 
@@ -26,7 +26,7 @@ def run_experiment(seed):
     # Initialize logger
     logger = Logger(
         LEVEL.n_lemings,
-        lemings_history_size=20,
+        lemings_history_size=5,
         logs_dir_path=LOGS_DIR, 
         params={
             "lvl": LEVEL.name,
@@ -88,8 +88,8 @@ if __name__ == "__main__":
     plotter = Plotter(
         logs_dir_path=LOGS_DIR, 
         save_plot_path="logs\\plots\\pipeline_test_plot_v2.png",
-        n_action_buckets=400,
-        episodes_moving_average=10
+        n_action_buckets=40,
+        episodes_moving_average=3
     )
 
     # Run experiments

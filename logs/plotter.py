@@ -226,7 +226,7 @@ class Plotter():
         ax.set_xlabel("Episode")
         ax.set_ylabel("Total Reward")
     
-    def make_plot(self):
+    def make_plot(self, show: bool=False):
         
         # Combine the logs and calculate statistics
         self.combine_episodes()
@@ -240,6 +240,9 @@ class Plotter():
         self._plot_III(axes[1, 0])
         self._plot_IV(axes[1, 1])
         fig.tight_layout()
+        
         plt.savefig(self.save_plot_path)
         print(f"[Info] Saved evaluation plot in {self.save_plot_path}")
-        plt.show()  
+
+        if show:
+            plt.show()  
