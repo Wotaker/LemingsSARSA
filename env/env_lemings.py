@@ -130,7 +130,7 @@ class LemingsEnv(gym.Env):
             # Try move
         if self._try_move(self._action_dict[action]) == False:      # leming is dead
             done = not self._next_leming()
-            return (self._pos, self._leming_id, self._moves_done + int(done)), -self._reward_scale * self._board_width, \
+            return (self._pos, self._leming_id, self._moves_done + int(done)), -10, \
                 done, {
                     "info": f"[Env Info] Leming {self._leming_id - int(not done)} was killed by a bunch of torns!",
                     "fate": "torns"
@@ -139,7 +139,7 @@ class LemingsEnv(gym.Env):
             # Check if done
         if self._chek_rescued():                                    # leming rescued
             done = not self._next_leming()
-            return (self._pos, self._leming_id, self._moves_done + int(done)), -1, \
+            return (self._pos, self._leming_id, self._moves_done + int(done)), 20, \
                 done, {
                     "info": f"[Env Info] Leming {self._leming_id - int(not done)} was rescued!",
                     "fate": "rescued"
@@ -148,7 +148,7 @@ class LemingsEnv(gym.Env):
             # Move by gravity
         if self._try_move((1, 0)) == False:                         # leming is dead
             done = not self._next_leming()
-            return (self._pos, self._leming_id, self._moves_done + int(done)), -self._reward_scale * self._board_width, \
+            return (self._pos, self._leming_id, self._moves_done + int(done)), -10, \
                 done, {
                     "info": f"[Env Info] Leming {self._leming_id - int(not done)} was killed by a bunch of torns!",
                     "fate": "torns"
@@ -157,7 +157,7 @@ class LemingsEnv(gym.Env):
             # Check if done
         if self._chek_rescued():                                    # leming rescued
             done = not self._next_leming()
-            return (self._pos, self._leming_id, self._moves_done + int(done)), -1, \
+            return (self._pos, self._leming_id, self._moves_done + int(done)), 20, \
                 done, {
                     "info": f"[Env Info] Leming {self._leming_id - int(not done)} was rescued!",
                     "fate": "rescued"
@@ -170,7 +170,7 @@ class LemingsEnv(gym.Env):
         for _ in range(lift):
             if self._try_move((-1, 0)) == False:                    # leming is dead
                 done = not self._next_leming()
-                return (self._pos, self._leming_id, self._moves_done + int(done)), -self._reward_scale * self._board_width, \
+                return (self._pos, self._leming_id, self._moves_done + int(done)), -10, \
                     done, {
                         "info": f"[Env Info] Leming {self._leming_id - int(not done)} was killed by a bunch of torns!",
                         "fate": "torns"
@@ -179,7 +179,7 @@ class LemingsEnv(gym.Env):
             # Check if done
         if self._chek_rescued():                                    # leming rescued
             done = not self._next_leming()
-            return (self._pos, self._leming_id, self._moves_done + int(done)), -1, \
+            return (self._pos, self._leming_id, self._moves_done + int(done)), 20, \
                 done, {
                     "info": f"[Env Info] Leming {self._leming_id - int(not done)} was rescued!",
                     "fate": "rescued"
@@ -189,14 +189,14 @@ class LemingsEnv(gym.Env):
         self._moves_done += 1
         if self._moves_done >= self._level.moves_limit:
             done = not self._next_leming()
-            return (self._pos, self._leming_id, self._moves_done), -self._reward_scale * self._board_width, \
+            return (self._pos, self._leming_id, self._moves_done), -self._level.moves_limit - 10, \
                 done, {
                     "info": f"[Env Info] Moves limit exceeded, leming {self._leming_id - int(not done)} died of boredom!",
                     "fate": "boredom"
                 }
 
             # Here, the leming managed to make the move safe and sound. He still has some moves left
-        return (self._pos, self._leming_id, self._moves_done), -1, \
+        return (self._pos, self._leming_id, self._moves_done), 1, \
                 False, {
                     "info": f"[Env Info] Leming {self._leming_id} moved and is still alive.",
                     "fate": "unknown"

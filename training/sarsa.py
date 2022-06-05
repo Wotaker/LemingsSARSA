@@ -12,13 +12,14 @@ from logs.plotter import Plotter
 
 PLOT_SAVE_PATH = "logs\\plots\\plot_sarsa.png"
 LOGS_DIR_PATH = "logs\\logs_sarsa"
-SEED = 421              # Starting seed
+SEED = 420              # Starting seed
 VERBOSE = False         # Renders the game states if set as True
-LOG_EP_EVRY = 500
+LOG_EP_EVRY = 1
+EPISODE_WINDOW=25
 
 
 # === Environment Parameters ===
-LEVEL = lvl_chimney
+LEVEL = lvl_small
 STOCHASTIC_WIND = False
 EXTRA_MOVES = False
 
@@ -31,7 +32,7 @@ MY_ENV = gym.make(
 
 # === Learning Parameters ===
 RUNS = 1
-EPISODES = 5000
+EPISODES = 3000
 LEARNING_RATE = 0.5
 DISCOUNT_FACTOR = 0.95
 EXPERIMENT_RATE = 0.05
@@ -134,7 +135,7 @@ def run_sarsa(seed):
     total_action_counter = 0
     for ep in range(1, EPISODES + 1):
 
-        if ep == 1 or ep % LOG_EP_EVRY == 0:
+        if ep == 1 or ep % (EPISODES // 40) == 0:
             print(f"[Info] Episode nr {ep}")
 
         # Init environment in starting state
@@ -167,7 +168,7 @@ def run_sarsa(seed):
 
                 # log
             logger.logg_action(total_action_counter, info["fate"] == "rescued")
-            logger.logg_episode(ep, info["fate"], action_counter, reward)
+            logger.logg_episode(ep, info["fate"], action_counter, reward, every=LOG_EP_EVRY)
 
                 # render state if verbose
             if VERBOSE:
@@ -212,7 +213,7 @@ if __name__ == "__main__":
         logs_dir_path=LOGS_DIR_PATH, 
         save_plot_path=PLOT_SAVE_PATH,
         n_action_buckets=200,
-        episodes_moving_average=25
+        episodes_moving_average=EPISODE_WINDOW
     )
 
     # Run experiments

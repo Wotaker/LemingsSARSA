@@ -33,7 +33,7 @@ class Logger():
             self.rescued += 1
             self.dict_acc_rescued[self.rescued] = (action_nr, self.rescued)
 
-    def logg_episode(self, episode_nr: np.int32, fate: str, actions: int, reward: int):
+    def logg_episode(self, episode_nr: np.int32, fate: str, actions: int, reward: int, every: int=1):
 
         # Reset lemings left counter if new episode
         if episode_nr > self.last_episode:
@@ -64,7 +64,8 @@ class Logger():
             return
         
         # On new episode
-        self.dict_episodes[episode_nr] = (rescued, torns, boredom, actions, reward)
+        if episode_nr % every == 0:
+            self.dict_episodes[episode_nr] = (rescued, torns, boredom, actions, reward)
     
     def save_logs(self):
 
