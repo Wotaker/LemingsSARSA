@@ -1,6 +1,4 @@
-from cProfile import label
 from functools import partial
-from matplotlib.figure import Figure
 from scipy.stats import t
 import numpy as np
 import pandas as pd

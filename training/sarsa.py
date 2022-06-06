@@ -10,9 +10,9 @@ from env.levels import *
 from logs.logger import Logger
 from logs.plotter import Plotter
 
-PLOT_SAVE_PATH = "logs\\plots\\plot_sarsa.png"
+PLOT_SAVE_PATH = "logs\\plots\\plot_sarsa"
 LOGS_DIR_PATH = "logs\\logs_sarsa"
-SEED = 420              # Starting seed
+SEED = 303              # Starting seed
 VERBOSE = False         # Renders the game states if set as True
 LOG_EP_EVRY = 1
 EPISODE_WINDOW=25
@@ -129,8 +129,6 @@ def run_sarsa(seed):
 
     # Create and initialize Q table
     Q = init_Q(shape=(MY_ENV.get_q_shape(include_moves_done=False)), type="random")
-    # if seed == SEED:
-    #     print(f" = = = Q szhape: {Q.shape}")
 
     total_action_counter = 0
     for ep in range(1, EPISODES + 1):
@@ -171,7 +169,8 @@ def run_sarsa(seed):
             logger.logg_episode(ep, info["fate"], action_counter, reward, every=LOG_EP_EVRY)
 
                 # render state if verbose
-            if VERBOSE:
+            
+            if VERBOSE: #  or (ep == EPISODES and MY_ENV.is_last_leming())
                 print(f"State: {state_next}")
                 print(f"Reward: {reward}")
                 print(info)
@@ -204,7 +203,24 @@ def run_sarsa(seed):
     # Save logs to csv files
     logger.save_logs()
 
+    # Render learned lemings path
+    path = []
 
+    state = MY_ENV.reset()
+    (y, x), leming_id, moves_done = state
+    path.append((y, x))
+    action = epsilon_greedy(Q, (y, x, leming_id - 1), MY_ENV.action_space_size, 0.0, train=False)
+    state, reward, done, info = MY_ENV.step(action)
+    (y, x), leming_id_next, moves_done_next = state
+    path.append((y, x))
+
+    while info["fate"] == "unknown":
+        action = epsilon_greedy(Q, (y, x, leming_id - 1), MY_ENV.action_space_size, 0.0, train=False)
+        state, reward, done, info = MY_ENV.step(action)
+        (y, x), leming_id_next, moves_done_next = state
+        path.append((y, x))
+    
+    MY_ENV.render(path=path)
 
 if __name__ == "__main__":
     
