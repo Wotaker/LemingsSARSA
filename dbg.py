@@ -19,7 +19,7 @@ LOGS_DIR = "logs\\logs_test"
 my_env = gym.make("LemingsEnv-v1", level=LEVEL)
 
 
-def run_experiment(seed):
+def run_experiment_local(seed):
 
     # Set seed
     np.random.seed(seed)
@@ -63,10 +63,6 @@ def run_experiment(seed):
 
             total_action_counter += 1
             action_counter += 1
-
-            # dbg
-            # if info["fate"] == "rescued":
-            #     print("RESCUED!")
             
             logger.logg_action(total_action_counter, info["fate"] == "rescued")
             logger.logg_episode(ep, info["fate"], action_counter, r)
@@ -96,7 +92,7 @@ if __name__ == "__main__":
     # Run experiments
     for i, run in enumerate(range(RUNS)):
         print(f"\n=== EXPERIMENT NR {i + 1} ===\n")
-        run_experiment(SEED + i)
+        run_experiment_local(SEED + i)
     
     # Make plots
     plotter.make_plot()
