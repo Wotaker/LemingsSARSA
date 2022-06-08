@@ -6,6 +6,13 @@ import matplotlib.pyplot as plt
 import os
 
 
+def suppress_qt_warnings():
+    os.environ["QT_DEVICE_PIXEL_RATIO"] = "0"
+    os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
+    os.environ["QT_SCREEN_SCALE_FACTORS"] = "1"
+    os.environ["QT_SCALE_FACTOR"] = "1"
+
+
 class Plotter():
     """Plotter is created after whole experiment, which may consists of multiple runs"""
 
@@ -16,6 +23,8 @@ class Plotter():
         episodes_moving_average: int=10,
         fresh_data: bool=True,
     ) -> None:
+
+        suppress_qt_warnings()
 
         self.logs_dir_path = logs_dir_path
         self.save_plot_path = save_plot_path
@@ -246,7 +255,7 @@ class Plotter():
         fig.tight_layout()
         
         plt.savefig(self.save_plot_path)
-        print(f"[Info] Saved evaluation plot in {self.save_plot_path}")
+        print(f"\n[Info] Saved evaluation plot in {self.save_plot_path}")
 
         if show:
             plt.show()  

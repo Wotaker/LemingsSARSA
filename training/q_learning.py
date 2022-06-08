@@ -7,7 +7,7 @@ from env.env_lemings import LemingsEnv
 from training.common import init_Q, epsilon_greedy
 
 
-def run_sarsa(
+def run_q_learning(
     seed: int,
     environment: LemingsEnv, 
     level: LemingsLevel, 
@@ -20,7 +20,7 @@ def run_sarsa(
     verbose: bool=False
 ):
     """
-    SARSA algorithm with logging
+    Q-learning algorithm with logging
 
     Parameters
     ----------
@@ -48,7 +48,7 @@ def run_sarsa(
 
     # Set seed
     np.random.seed(seed)
-    print(f"=== Running SARSA algorithm with seed {seed} ===\n")
+    print(f"=== Running Q-Learning algorithm with seed {seed} ===\n")
 
     # Initialize logger
     logger = Logger(
@@ -81,9 +81,6 @@ def run_sarsa(
             print("Env reset:")
             environment.render(space=True)
 
-        # Choose first action to take
-        action = epsilon_greedy(Q, (y, x, leming_id - 1), environment.action_space_size, epsilon)
-
         # Loop until done
         action_counter = 0
         step = 1
@@ -92,6 +89,9 @@ def run_sarsa(
             
             if verbose:
                 print(f"Step {step}")
+            
+            # Choose action to take
+            action = epsilon_greedy(Q, (y, x, leming_id - 1), environment.action_space_size, epsilon)
             
             # Take action a, observe new state s' and reward r
             state_next, reward, done, info = environment.step(action)
@@ -112,27 +112,21 @@ def run_sarsa(
                 print(f"Reward: {reward}")
                 print(info)
                 environment.render(space=True)
-
-            # Choose action a' from s' using e-greedy policy based on Q
-            action_next = epsilon_greedy(
-                Q, (y_next, x_next, leming_id_next - 1), environment.action_space_size, epsilon
-            )
             
             # Update Q table
             q_prev = Q[y, x, leming_id - 1, action]
             try:
                 Q[y, x, leming_id - 1, action] = (1 - discount) * q_prev +\
-                    discount * (reward + lr * Q[y_next, x_next, leming_id_next - 1, action_next])
+                    discount * (reward + lr * np.max(Q[y_next, x_next, leming_id_next - 1, :]))
             except IndexError as e:
                 print(f"Episode {ep}, step {step}")
                 print(f"Leming_id: {leming_id}")
                 print(f"Leming_id_next: {leming_id_next}")
                 traceback.print_exc()
                 exit(1)
-            
+                
             # Go to next step
             y, x, leming_id, moves_done = y_next, x_next, leming_id_next, moves_done_next
-            action = action_next
 
             step += 1
 
