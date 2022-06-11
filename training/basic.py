@@ -35,6 +35,7 @@ def run_basic(
 
     # Set seed
     np.random.seed(seed)
+    print(f"=== Running Basic algorithm with seed {seed} ===\n")
 
     # Initialize logger
     logger = Logger(

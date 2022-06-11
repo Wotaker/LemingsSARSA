@@ -17,6 +17,7 @@ def run_sarsa(
     lr: float=0.5,
     epsilon: float=0.05,
     discount: float=0.95,
+    decay: float=0.0,
     verbose: bool=False
 ):
     """
@@ -42,6 +43,8 @@ def run_sarsa(
         Experiment rate, by default 0.05
     discount : float, optional
         Discount of return, by default 0.95
+    decay : float, optional
+        Decay in learning rate calculation, by default 0.0, meaning constant learning rate
     verbose : bool, optional
         If set as True, renders each state, by default False
     """
@@ -67,6 +70,7 @@ def run_sarsa(
     # Create and initialize Q table
     Q = init_Q(shape=(environment.get_q_shape(include_moves_done=False)), type="random")
 
+    lr0 = lr
     total_action_counter = 0
     for ep in range(1, episodes + 1):
 
@@ -135,6 +139,9 @@ def run_sarsa(
             action = action_next
 
             step += 1
+        
+        # Update Learning Rate
+        lr = lr0 / (1.0 + decay * ep)
 
     # Save logs to csv files
     logger.save_logs()
