@@ -1,4 +1,7 @@
 # Ignore Logs
 logs/logs/
 
+# Ignore lab files
+raport.pdf
+wojciech_ciezobka_lemingi.zip
 
