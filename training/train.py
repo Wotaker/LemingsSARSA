@@ -14,8 +14,8 @@ from training.basic import run_basic
 
 # ===== Environment Parameters =====
 # ----------------------------------
-SEED = 420
-LEVEL = lvl_small
+SEED = 666
+LEVEL = lvl_chimney
 STOCHASTIC_WIND = False
 EXTRA_MOVES = False
 
@@ -29,18 +29,18 @@ MY_ENV = gym.make(
 
 # ===== Learning Parameters ========
 # ----------------------------------
-ALGORITHM = 'sarsa'         # choose from ['q', 'sarsa', 'basic']
-EPISODES = 3000
-LEARNING_RATE = 0.5
+ALGORITHM = 'q'         # choose from ['q', 'sarsa', 'basic']
+EPISODES = 5000
+LEARNING_RATE = 1.0
 EXPERIMENT_RATE = 0.05
 DISCOUNT_FACTOR = 0.95
-DECAY = 0.0
+DECAY = 0.0005
 
 
 # ===== Logging Parameters =========
 # ----------------------------------
-RUNS = 5
-PLOT_SAVE_PATH = f"results\\plots\\plot_{ALGORITHM}_{LEVEL.name}_{RUNS}.png"
+RUNS = 10
+PLOT_SAVE_PATH = f"results\\plots\\plot_{ALGORITHM}_{LEVEL.name}_{RUNS}_dec={DECAY}.png"
 LOGS_DIR_PATH = "logs\\logs"
 VERBOSE = False                 # Renders the game states if set as True
 LOG_EP_EVRY = 1

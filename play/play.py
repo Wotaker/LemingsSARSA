@@ -5,8 +5,8 @@ from env.levels import *
 
 my_env = gym.make(
     "LemingsEnv-v1", 
-    level=lvl_chimney,
-    stochastic_wind=True,
+    level=lvl_debug,
+    stochastic_wind=False,
     extra_moves=False
 )
 
